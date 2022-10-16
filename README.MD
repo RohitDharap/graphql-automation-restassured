@@ -3,6 +3,8 @@
 
 Idea behind this project is to showcase a "JAVA" way of automating GraphQL calls. Currently, only Query types are supported, but mutations will be added soon :).
 
+The project uses sample graphql for "Rick and Morty" series (locations, characters, episodes, etc). We use this to write some basic tests (e.g., fetch name and air date of first 5 episodes, etc).
+
 ## How to Automate GraphQL Query
 
 Lets cut to the chase directly :). We can discuss details of design and architecture later on. Lets just get our hands dirty on how to fire a query and verify response.
