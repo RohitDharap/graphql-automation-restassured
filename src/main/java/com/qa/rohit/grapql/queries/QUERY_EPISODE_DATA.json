@@ -1,0 +1,3 @@
+{
+  "1_name_date_first_5_episodes": "query($episodeIds:[ID!]!){\n  episodesByIds(ids:$episodeIds){\n    id name air_date\n  }\n}"
+}
