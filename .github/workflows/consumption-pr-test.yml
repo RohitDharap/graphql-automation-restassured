@@ -6,7 +6,7 @@ on:
 jobs:
 
   run-test:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, 'run cn test') && contains(github.event.pull_request.labels.*.name, 'Consumption')
+    if: github.event.issue.pull_request && contains(github.event.pull_request.labels.*.name, 'Consumption')
     runs-on: ubuntu-latest
     steps:
 
