@@ -29,9 +29,8 @@ jobs:
       - name: Test
         run: |
           echo "Testing..."
-          input=$(echo "${{ github.event.comment.body }}" | jq -r '.body')
-          text=$(echo "$input" | sed -n 's/^run cn test *\(.*\)/\1/p')
-          text=$(echo "$text" | sed 's/^@//')
+          input=$(echo "${{ github.event.comment.body }}")
+          text=$(echo "$input" | sed -n 's/^run cn test *\(.*\)/\1/p' | sed 's/^@//')    
           if [ -z "$text" ]; then
                 text="Smoke"
           fi
