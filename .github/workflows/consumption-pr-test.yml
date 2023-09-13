@@ -29,6 +29,17 @@ jobs:
       - name: Test
         run: |
           echo "Testing..."
+          input=$(echo "${{ github.event.comment.body }}" | jq -r '.body')
+          text=$(echo "$input" | sed -n 's/^run cn test *\(.*\)/\1/p')
+          text=$(echo "$text" | sed 's/^@//')
+          if [ -z "$text" ]; then
+                text="Smoke"
+          fi
+          # shellcheck disable=SC2206
+          finalAnnotation=($echo "com.hotstar.annotations."$text)
+          echo "Text after 'run cn test': $text"
+          # shellcheck disable=SC2128
+          echo "Text after 'run cn test': $finalAnnotation"
 
       - name: Set latest commit status as ${{ job.status }}
         if: always()
