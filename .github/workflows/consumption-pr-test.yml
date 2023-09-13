@@ -39,10 +39,12 @@ jobs:
           echo "Text after 'run cn test': $text"
           # shellcheck disable=SC2128
           echo "Text after 'run cn test': $finalAnnotation"
+          echo "FINAL_ANNOTATION=$finalAnnotation" >> $GITHUB_ENV
+
 
       - name: Run Test
         run: |
-          echo "$finalAnnotation"
+          echo "final annotation = $FINAL_ANNOTATION"
 
 
       - name: Set latest commit status as ${{ job.status }}
