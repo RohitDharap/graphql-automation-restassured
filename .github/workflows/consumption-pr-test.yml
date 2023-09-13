@@ -26,7 +26,7 @@ jobs:
         with:
           ref: ${{ steps.comment-branch.outputs.head_ref }}
 
-      - name: Test
+      - name: Extract Annotation
         run: |
           echo "Testing..."
           input=$(echo "${{ github.event.comment.body }}")
@@ -35,10 +35,15 @@ jobs:
                 text="Smoke"
           fi
           # shellcheck disable=SC2206
-          finalAnnotation=($echo "com.hotstar.annotations."$text)
+          finalAnnotation="com.hotstar.annotations.$text"
           echo "Text after 'run cn test': $text"
           # shellcheck disable=SC2128
           echo "Text after 'run cn test': $finalAnnotation"
+
+      - name: Run Test
+        run: |
+          echo "$finalAnnotation"
+
 
       - name: Set latest commit status as ${{ job.status }}
         if: always()
