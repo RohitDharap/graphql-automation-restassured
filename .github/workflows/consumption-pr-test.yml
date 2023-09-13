@@ -1,0 +1,39 @@
+name: consumption-pr-test
+on:
+  issue_comment:
+    types: [ created ]
+
+jobs:
+
+  run-test:
+    if: github.event.issue.pull_request && contains(github.event.comment.body, 'run cn test'))
+    runs-on: [ hs-releng-action-runner ]
+    steps:
+
+      - name: Get branch of PR
+        uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
+
+      - name: Set latest commit status as pending
+        uses: myrotvorets/set-commit-status-action@v1.1.7
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: pending
+
+      - name: Checkout PR branch ${{ steps.comment-branch.outputs.head_ref }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.comment-branch.outputs.head_ref }}
+
+      - name: Test
+        run: |
+          echo "Testing..."
+
+      - name: Set latest commit status as ${{ job.status }}
+        if: always()
+        uses: myrotvorets/set-commit-status-action@v1.1.7
+        with:
+          sha: ${{ steps.comment-branch.outputs.head_sha }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
