@@ -7,6 +7,7 @@ jobs:
 
   run-test:
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'run cn test')
+    runs-on: ubuntu-latest
     steps:
 
       - name: Get branch of PR
