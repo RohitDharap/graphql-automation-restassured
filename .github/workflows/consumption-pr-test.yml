@@ -67,17 +67,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '2.7.0'
-
-      - name: Setup Fastlane
-        run: bundle install
-
-      - name: Create builds
-        run: . fetch_config secret/non-prod/clients/cloud && cd scripts && ./fastlane-run.sh build_app_debug
-
       - name: Fetch apks
         run: |
           echo "$ANNOTATIONS"
