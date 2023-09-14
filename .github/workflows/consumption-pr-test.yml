@@ -7,7 +7,29 @@ jobs:
 
   run-test:
     if: github.event.issue.pull_request && contains(github.event.comment.body, 'run cn test')
-    runs-on: ubuntu-latest
+    runs-on: [ hs-releng-action-runner ]
+    env:
+      BUILD_TYPE: "debug"
+      BUILD_ENV: "preprod"
+      BUILD_BUSINESS: "In"
+      ClassName: "suites.ConsumptionSuite"
+      POD_NAME: "Consumption PR Check"
+      MaxDevices: 4
+      DeviceVersion: "6.0"
+      TEST_RUNNER: "androidx.test.runner.AndroidJUnitRunner"
+      PROJECT_ID: "62208a519427787581a5da64"
+      ACCESS_KEY: "D3ILED1aR_xUD8m7RXl3fIhCfZw"
+      UPLOAD_TEST_APK: "HotstarTest.apk"
+      UPLOAD_APK: "Hotstar.apk"
+      ROBUSTEST_IP: "devicelab.hotstar.com"
+      RUN_SETTING: "6453b5df0bc67b3a47b8dd6e"
+      COUNTRY: "in"
+      PACKAGE_NAME: "in.startv.hotstar"
+      runType: "realdevice"
+      SUBSET_TARGET: "100%"
+      GIT_BRANCH: ${{ github.ref_name }}
+      EnableLeakCanary: "false"
+      ANNOTATIONS: ""
     steps:
 
       - name: Get branch of PR
@@ -28,7 +50,8 @@ jobs:
 
       - name: Extract Annotation
         run: |
-          echo "Testing..."
+          echo "Extract Annotation from comment ..."
+          echo $(echo "${{ GIT_BRANCH }}")
           input=$(echo "${{ github.event.comment.body }}")
           text=$(echo "$input" | sed -n 's/^run cn test *\(.*\)/\1/p' | sed 's/^@//')    
           if [ -z "$text" ]; then
@@ -39,13 +62,38 @@ jobs:
           echo "Text after 'run cn test': $text"
           # shellcheck disable=SC2128
           echo "Text after 'run cn test': $finalAnnotation"
-          echo "FINAL_ANNOTATION=$finalAnnotation" >> $GITHUB_ENV
+          echo "ANNOTATIONS=$finalAnnotation" >> $GITHUB_ENV
 
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Run Test
+      - name: set up JDK 1.11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7.0'
+
+      - name: Setup Fastlane
+        run: bundle install
+
+      - name: Create builds
+        run: . fetch_config secret/non-prod/clients/cloud && cd scripts && ./fastlane-run.sh build_app_debug
+
+      - name: Fetch apks
         run: |
-          echo "final annotation = $FINAL_ANNOTATION"
-
+          echo "$ANNOTATIONS"
 
       - name: Set latest commit status as ${{ job.status }}
         if: always()
