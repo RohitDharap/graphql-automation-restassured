@@ -51,7 +51,7 @@ jobs:
       - name: Extract Annotation
         run: |
           echo "Extract Annotation from comment ..."
-          echo $(echo "${{ GIT_BRANCH }}")
+          echo $(echo "$GIT_BRANCH")
           input=$(echo "${{ github.event.comment.body }}")
           text=$(echo "$input" | sed -n 's/^run cn test *\(.*\)/\1/p' | sed 's/^@//')    
           if [ -z "$text" ]; then
