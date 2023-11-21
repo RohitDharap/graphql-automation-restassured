@@ -12,7 +12,8 @@ Lets cut to the chase directly :). We can discuss details of design and architec
 First thing we need to do is create an object of type "Query"
 
 ```
-Query query = new Query(arg1, arg2);
+Query query = new Query(arg1, arg2); 
+//random comment
 ```
 What are these arg1 and arg2 ? Good Question. Let's explore method declaration.
 ```
