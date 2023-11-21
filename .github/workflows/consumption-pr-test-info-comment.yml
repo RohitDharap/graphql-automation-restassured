@@ -21,7 +21,7 @@ jobs:
           filter_labels() {
             while IFS= read -r label; do
             echo "label: $label"
-            if echo "label" | grep -qiE "$regex_pattern"; then
+            if [[ "$label" =~ $regex_pattern ]]; then
               echo "add label"
               filtered_labels+=( "$label" )
             fi
