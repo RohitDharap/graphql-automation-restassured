@@ -23,7 +23,7 @@ jobs:
             echo "Label 'consumption' not found. Skipping subsequent steps."
             echo "SKIP_SUBSEQUENT_STEPS=true" >> $GITHUB_ENV          
           fi
-          echo "::set-output name=labels::$filtered_labels"
+          echo "PR_LABELS=$filtered_labels" >> $GITHUB_ENV
       - name: Checkout repository
         if: env.SKIP_SUBSEQUENT_STEPS != 'true'
         uses: actions/checkout@v3
@@ -34,12 +34,12 @@ jobs:
           pwd
           ls
           comment_message="test"
+          echo "$PR_LABELS"
           echo "$comment_message"
           echo "::set-output name=comment_message::$comment_message"
         id: comment-msg
       - name: Add PR Comment
-        if: |
-          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        if: env.SKIP_SUBSEQUENT_STEPS != 'true'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
