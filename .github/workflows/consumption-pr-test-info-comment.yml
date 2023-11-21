@@ -1,0 +1,42 @@
+name: consumption-pr-test-info-comment
+on:
+  pull_request:
+
+jobs:
+  add-info-comment:
+    runs-on: [ ubuntu-latest ]
+    steps:
+
+      - name: Fetch latest pull request info
+        id: fetch-pr-info
+        run: |
+          response="{\"labels\":[{\"name\":\"None\", \"game\":\"TP\"},{\"name\":\"Growth\"},{\"name\":\"Discovery\"}]}"
+          labels=$(echo "$response" | jq -r '.labels[].name')
+          echo "$labels"
+          # converting to lowercase
+          filtered_labels=$(echo "$labels" | tr '[:upper:]' '[:lower:]')
+          echo "$filtered_labels"
+          echo "::set-output name=labels::$filtered_labels"
+      - name: Checkout repository
+        if: |
+          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        uses: actions/checkout@v3
+
+      - name: Read Comment Message from consumption feature annotation mapping
+        if: |
+          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        run: |
+          pwd
+          ls
+          comment_message="test"
+          echo "$comment_message"
+          echo "::set-output name=comment_message::$comment_message"
+        id: comment-msg
+      - name: Add PR Comment
+        if: |
+          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Did you know ? You can trigger consumption tests feature wise with:
+            ${{ steps.comment-msg.outputs.comment_message }}
