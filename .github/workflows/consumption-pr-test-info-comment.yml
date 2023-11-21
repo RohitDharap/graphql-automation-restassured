@@ -20,7 +20,7 @@ jobs:
           regex_pattern="consumption|123|none"
           filter_labels() {
             while IFS= read -r label; do
-            echo "label: label"
+            echo "label: $label"
             if echo "label" | grep -qiE "$regex_pattern"; then
               echo "add label"
               filtered_labels+=( "$label" )
@@ -28,7 +28,7 @@ jobs:
             done
           }
           filter_labels < <(echo "$lowercase_labels")
-          echo $filtered_labels[0]
+          echo ${filtered_labels[0]}
           echo "POD_NAME=$filtered_labels[0]" >> $GITHUB_ENV
           echo $POD_NAME
 
