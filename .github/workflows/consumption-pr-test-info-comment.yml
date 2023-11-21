@@ -33,21 +33,21 @@ jobs:
           echo $POD_NAME
 
       - name: Checkout repository
-        if: env.SKIP_SUBSEQUENT_STEPS != 'true'
+        if: env.POD_NAME != ""
         uses: actions/checkout@v3
 
       - name: Read Comment Message from consumption feature annotation mapping
-        if: env.POD_NAME != ''
+        if: env.POD_NAME != ""
         run: |
           pwd
           ls
           comment_message="test"
-          echo "$PR_LABELS"
+          echo "$POD_NAME"
           echo "$comment_message"
           echo "::set-output name=comment_message::$comment_message"
         id: comment-msg
       - name: Add PR Comment
-        if: env.POD_NAME != ''
+        if: env.POD_NAME != ""
         uses: mshick/add-pr-comment@v2
         with:
           message: |
