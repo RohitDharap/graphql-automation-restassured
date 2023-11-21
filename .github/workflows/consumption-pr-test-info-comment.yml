@@ -10,7 +10,7 @@ jobs:
       - name: Fetch latest pull request info
         id: fetch-pr-info
         run: |
-          response="{\"labels\":[{\"name\":\"Consumption\", \"game\":\"TP\"},{\"name\":\"Growth\"},{\"name\":\"Discovery\"}]}"
+          response="{\"labels\":[{\"name\":\"frfsf\", \"game\":\"TP\"},{\"name\":\"Growth\"},{\"name\":\"Discovery\"}]}"
           labels=$(echo "$response" | jq -r '.labels[].name')
           echo "$labels"
           # converting to lowercase
