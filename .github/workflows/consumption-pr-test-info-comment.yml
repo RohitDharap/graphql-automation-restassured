@@ -16,15 +16,19 @@ jobs:
           # converting to lowercase
           filtered_labels=$(echo "$labels" | tr '[:upper:]' '[:lower:]')
           echo "$filtered_labels"
+          if [[ $filtered_labels == *consumption* ]]; then
+            echo "Label 'consumption' found. Proceeding with the subsequent steps."
+          else
+            echo "Label 'consumption' not found. Skipping subsequent steps."
+            echo "::set-env name=SKIP_SUBSEQUENT_STEPS::true"  
+          fi
           echo "::set-output name=labels::$filtered_labels"
       - name: Checkout repository
-        if: |
-          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        if: env.SKIP_SUBSEQUENT_STEPS != 'true'
         uses: actions/checkout@v3
 
       - name: Read Comment Message from consumption feature annotation mapping
-        if: |
-          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+        if: env.SKIP_SUBSEQUENT_STEPS != 'true'
         run: |
           pwd
           ls
