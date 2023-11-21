@@ -19,12 +19,12 @@ jobs:
           echo "::set-output name=labels::$filtered_labels"
       - name: Checkout repository
         if: |
-          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
         uses: actions/checkout@v3
 
       - name: Read Comment Message from consumption feature annotation mapping
         if: |
-          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
         run: |
           pwd
           ls
@@ -34,7 +34,7 @@ jobs:
         id: comment-msg
       - name: Add PR Comment
         if: |
-          bash -c 'shopt -s nocasematch && [[ "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
+          bash -c '[[ "$(echo "${{ steps.fetch-pr-info.outputs.labels }}" == *consumption* ]]'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
