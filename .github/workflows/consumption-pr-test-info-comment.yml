@@ -18,7 +18,7 @@ jobs:
           echo $lowercase_labels
           filtered_labels=()
           regex_pattern="consumption|123|none"
-          filter_items() {
+          filter_labels() {
             while IFS= read -r label; do
             echo "label: label"
             if echo "label" | grep -qiE "$regex_pattern"; then
