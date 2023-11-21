@@ -18,9 +18,10 @@ jobs:
           echo "$filtered_labels"
           if [[ $filtered_labels == *consumption* ]]; then
             echo "Label 'consumption' found. Proceeding with the subsequent steps."
+            echo "SKIP_SUBSEQUENT_STEPS=false" >> $GITHUB_ENV
           else
             echo "Label 'consumption' not found. Skipping subsequent steps."
-            echo "::set-env name=SKIP_SUBSEQUENT_STEPS::true"  
+            echo "SKIP_SUBSEQUENT_STEPS=true" >> $GITHUB_ENV          
           fi
           echo "::set-output name=labels::$filtered_labels"
       - name: Checkout repository
